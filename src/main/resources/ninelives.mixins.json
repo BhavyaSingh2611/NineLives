@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.tbm.server.ninelives.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "DisplayEntityMixin",
+    "EnderDragonFightMixin",
+    "ServerPlayerEntityMixin",
+    "TextDisplayEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

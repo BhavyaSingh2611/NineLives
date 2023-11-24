@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "ninelives",
+  "version": "${version}",
+  "name": "NineLives",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/BhavyaSingh2611/NineLives"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/ninelives/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "org.tbm.server.ninelives.NineLives"
+    ]
+  },
+  "mixins": [
+    "ninelives.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
