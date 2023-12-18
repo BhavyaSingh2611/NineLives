@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ninelives:block/death_leaderboard_block"
+  }
+}

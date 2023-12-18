@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "ninelives:block/team_leaderboard_block"}
+  }
+}

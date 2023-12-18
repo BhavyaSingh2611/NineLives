@@ -3,9 +3,11 @@ package org.tbm.server.ninelives;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -25,6 +27,26 @@ public class CustomPlaceholders {
     };
 
     public static void registerCustomPlaceholders() {
+
+        Placeholders.register(new Identifier("ninelives", "timer"), (ctx, arg) -> {
+            LocalDateTime dateTime = LocalDateTime.parse("2024-01-03T00:00:00");
+
+            long time = dateTime.toEpochSecond(ZoneOffset.ofHours(0));
+            long currentTime = System.currentTimeMillis() / 1000L;
+            long timeLeft = time - currentTime;
+
+            long hours = timeLeft / 3600;
+            long minutes = (timeLeft % 3600) / 60;
+            long seconds = timeLeft % 60;
+
+            if (timeLeft < 0) {
+                return PlaceholderResult.value("00:00:00");
+            }
+
+            return PlaceholderResult.value("%02d:%02d:%02d".formatted(hours, minutes, seconds));
+
+        });
+
         Placeholders.register(new Identifier("ninelives", "team_lives"), (ctx, arg) -> {
             if (arg == null) {
                 return !ctx.hasPlayer() ? PlaceholderResult.invalid("No player!") : PlaceholderResult.value(getLives(ctx));
@@ -155,11 +177,31 @@ public class CustomPlaceholders {
     }
 
     public static Text getTeamAdvancements(PlaceholderContext ctx) {
+        Map<String, String> teamNameMap = new HashMap<>();
+
+        teamNameMap.put("bac_team_aqua", "Aqua_Team");
+        teamNameMap.put("bac_team_black", "Black_Team");
+        teamNameMap.put("bac_team_blue", "Blue_Team");
+        teamNameMap.put("bac_team_dark_aqua", "Dark_Aqua_Team");
+        teamNameMap.put("bac_team_dark_blue", "Dark_Blue_Team");
+        teamNameMap.put("bac_team_dark_gray", "Dark_Gray_Team");
+        teamNameMap.put("bac_team_dark_green", "Dark_Green_Team");
+        teamNameMap.put("bac_team_dark_purple", "Dark_Purple_Team");
+        teamNameMap.put("bac_team_dark_red", "Dark_Red_Team");
+        teamNameMap.put("bac_team_gold", "Gold_Team");
+        teamNameMap.put("bac_team_gray", "Gray_Team");
+        teamNameMap.put("bac_team_green", "Green_Team");
+        teamNameMap.put("bac_team_light_purple", "Light_Purple_Team");
+        teamNameMap.put("bac_team_red", "Red_Team");
+        teamNameMap.put("bac_team_white", "White_Team");
+        teamNameMap.put("bac_team_yellow", "Yellow_Team");
+
         if (ctx.player().getScoreboardTeam() == null) {
             return Text.literal("00").formatted(Formatting.OBFUSCATED);
         } else {
             Team team = (Team)ctx.player().getScoreboardTeam();
-            String teamName = team.getName();
+            String temp = team.getName();
+            String teamName = teamNameMap.get(temp);
             Scoreboard scoreboard = ctx.player().getScoreboard();
             ScoreboardObjective scoreObjective = scoreboard.getNullableObjective("bac_advancements_team");
             if (scoreObjective == null) {
@@ -174,6 +216,25 @@ public class CustomPlaceholders {
     }
 
     public static Text getTeamAdvancements(PlaceholderContext ctx, String arg) {
+        Map<String, String> teamNameMap = new HashMap<>();
+
+        teamNameMap.put("bac_team_aqua", "Aqua_Team");
+        teamNameMap.put("bac_team_black", "Black_Team");
+        teamNameMap.put("bac_team_blue", "Blue_Team");
+        teamNameMap.put("bac_team_dark_aqua", "Dark_Aqua_Team");
+        teamNameMap.put("bac_team_dark_blue", "Dark_Blue_Team");
+        teamNameMap.put("bac_team_dark_gray", "Dark_Gray_Team");
+        teamNameMap.put("bac_team_dark_green", "Dark_Green_Team");
+        teamNameMap.put("bac_team_dark_purple", "Dark_Purple_Team");
+        teamNameMap.put("bac_team_dark_red", "Dark_Red_Team");
+        teamNameMap.put("bac_team_gold", "Gold_Team");
+        teamNameMap.put("bac_team_gray", "Gray_Team");
+        teamNameMap.put("bac_team_green", "Green_Team");
+        teamNameMap.put("bac_team_light_purple", "Light_Purple_Team");
+        teamNameMap.put("bac_team_red", "Red_Team");
+        teamNameMap.put("bac_team_white", "White_Team");
+        teamNameMap.put("bac_team_yellow", "Yellow_Team");
+
         Scoreboard scoreboard = ctx.server().getScoreboard();
         ScoreboardObjective scoreObjective = scoreboard.getNullableObjective("bac_advancements_team");
         if (scoreObjective == null) {
@@ -188,11 +249,12 @@ public class CustomPlaceholders {
                 return scores != null && teamPlace < scores.size() ? Text.of(String.valueOf(scores.get(teamPlace).getScore())) : Text.literal("00").formatted(Formatting.OBFUSCATED);
             } catch (Exception var6) {
                 if (!scoreboard.playerHasObjective(arg, scoreObjective)) {
-                    Team playerTeam = scoreboard.getPlayerTeam(arg);
+                    Team playerTeam = scoreboard.getTeam(arg);
+                    String search = teamNameMap.get(arg);
                     if (playerTeam == null) {
                         return Text.literal("00").formatted(Formatting.OBFUSCATED);
                     } else {
-                        return scoreboard.playerHasObjective(playerTeam.getName(), scoreObjective) ? Text.of(String.valueOf(scoreboard.getPlayerScore(playerTeam.getName(), scoreObjective).getScore())) : Text.literal("00").formatted(Formatting.OBFUSCATED);
+                        return scoreboard.playerHasObjective(search, scoreObjective) ? Text.of(String.valueOf(scoreboard.getPlayerScore(search, scoreObjective).getScore())) : Text.literal("00").formatted(Formatting.OBFUSCATED);
                     }
                 } else {
                     return Text.of(String.valueOf(scoreboard.getPlayerScore(arg, scoreObjective).getScore()));

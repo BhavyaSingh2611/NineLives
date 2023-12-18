@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ninelives:block/dark_purple_team_block"
+  }
+}

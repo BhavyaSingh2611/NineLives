@@ -1,5 +1,7 @@
 package org.tbm.server.ninelives;
 
+import fuzs.strawstatues.world.entity.decoration.StrawStatue;
+import org.tbm.server.ninelives.blocks.ModBlocks;
 import org.tbm.server.ninelives.commands.HologramCommand;
 import org.tbm.server.ninelives.event.PlayerDeathCallback;
 import org.tbm.server.ninelives.mixinInterfaces.ITextDisplayEntityMixin;
@@ -31,7 +33,6 @@ public class NineLives implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> HologramCommand.register(dispatcher, registryAccess, environment));
 
         ServerLifecycleEvents.SERVER_STARTING.register((server) -> HologramManager.clear());
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> PodiumManager.clear());
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof DisplayEntity.TextDisplayEntity textEntity) {
@@ -42,18 +43,21 @@ public class NineLives implements ModInitializer {
                 }
             }
 
-            if (entity instanceof DisplayEntity.ItemDisplayEntity itemEntity) {
-                if (itemEntity.getCommandTags().contains("podium_statue")) {
-                    PodiumManager.addStatue(itemEntity);
+            if (entity instanceof StrawStatue) {
+                StrawStatue statue = (StrawStatue) entity;
+                if (statue.hasCustomName()) {
+                    String name = statue.getCustomName().getString();
+                    System.out.println(name);
                 }
-            }
 
+            }
         });
+        ModBlocks.registerModBlocks();
     }
 
     private void onWorldTick(ServerWorld serverWorld) {
         HologramManager.onTick(serverWorld);
-        PodiumManager.onTick(serverWorld);
+        PositionManager.onTick(serverWorld);
     }
 
     public void deathEvent(ServerPlayerEntity player) {
@@ -78,7 +82,6 @@ public class NineLives implements ModInitializer {
                 } else {
                     LOGGER.warn("Team doesn't have lives score set!");
                 }
-
             }
         }
     }

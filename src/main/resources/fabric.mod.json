@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "ninelives",
+  "id": "slow_ninelives",
   "version": "${version}",
   "name": "NineLives",
   "description": "",
@@ -10,14 +10,14 @@
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/ninelives/icon.png",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "org.tbm.server.ninelives.NineLives"
     ]
   },
   "mixins": [
-    "ninelives.mixins.json"
+    "slow_ninelives.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

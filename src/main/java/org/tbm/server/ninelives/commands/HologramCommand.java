@@ -57,6 +57,11 @@ public class HologramCommand {
                                 .executes(HologramCommand::create)))
                 .build();
 
+        LiteralCommandNode<ServerCommandSource> timerNode = CommandManager
+                .literal("timer")
+                .executes(HologramCommand::timer)
+                .build();
+
         LiteralCommandNode<ServerCommandSource> editNode = CommandManager
                 .literal("edit")
                 .then(CommandManager.argument("hologram", HologramCommand.HologramArgumentType.hologram())
@@ -111,8 +116,11 @@ public class HologramCommand {
 
     private static int create(CommandContext<ServerCommandSource> context) {
         Text text = TextArgumentType.getTextArgument(context, "text");;
-        System.out.println(text);
         return executeCreate(context.getSource(), context.getArgument("name", String.class), Objects.requireNonNullElseGet(text, () -> Text.literal("New hologram")));
+    }
+
+    private static int timer(CommandContext<ServerCommandSource> context) {
+        return executeCreate(context.getSource(), "OriginsTimer", Text.literal("%ninelives:timer%"));
     }
 
     private static int edit(CommandContext<ServerCommandSource> context) {
