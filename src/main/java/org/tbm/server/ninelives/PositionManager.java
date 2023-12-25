@@ -24,6 +24,8 @@ public class PositionManager {
     private static final int[][] team1stPodiumsPos = {{1, 0, 0}, {-1, 0, -1}, {-1, 0, 1}};
     private static final int[][] team2ndPodiumsPos = {{0, 2, 0}, {0, 2, 0}, {0, 2, 0}};
     private static final int[][] team3rdPodiumsPos = {{0, 2, 0}, {0, 2, 0}, {0, 2, 0}};
+
+    private static List<DisplayEntity.TextDisplayEntity> hologramList = new ArrayList<>();
     private static long lastLeaderboardCheckTime = 0L;
 
     private static final Comparator<ScoreboardPlayerScore> HIGH_SCORE_COMPARATOR = (a, b) -> {
@@ -90,15 +92,13 @@ public class PositionManager {
                         int hologramZ = team1stPodiumsPos[i][2];
                         Vec3d hologramPos = team1stPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        Box box = new Box(hologramPos, hologramPos);
-
-                        List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box.expand(2), e -> true);
-                        for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures) {
+                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
                             ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
                             displayEntity.setIsHologram(false);
                             hologram.kill();
                             HologramManager.removeHologram(displayEntity.getHologramName());
                             hologram.remove(Entity.RemovalReason.DISCARDED);
+                            hologramList.remove(hologram);
                         }
 
                         entity.setPosition(hologramPos);
@@ -110,13 +110,15 @@ public class PositionManager {
                         entity.getDataTracker().set(displayEntityMixin.getBillboardData(), (byte) 3);
                         textDisplayEntityMixin.setIsHologram(true);
                         textDisplayEntityMixin.setHologramName(String.format("%s_%s", teamNameMap.get(displayTeam.getName()), playerNames.get(i)));
+                        hologramList.add(entity);
                         world.spawnEntity(entity);
+
                         if (i == 1) {
                             DisplayEntity.TextDisplayEntity entity2 = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, world);
                             ITextDisplayEntityMixin textDisplayEntityMixin2 = (ITextDisplayEntityMixin) entity2;
                             IDisplayEntityMixin displayEntityMixin2 = (IDisplayEntityMixin) entity2;
 
-                            double[] teamHologramPos = {1, 0, -1};
+                            double[] teamHologramPos = {1, 1, 1};
                             Vec3d hologramPos2 = team1stPodiums[i].getPos().add(teamHologramPos[0], teamHologramPos[1], teamHologramPos[2]);
 
                             entity2.setPosition(hologramPos2);
@@ -129,6 +131,7 @@ public class PositionManager {
                             entity2.getDataTracker().set(displayEntityMixin2.getBillboardData(), (byte) 3);
                             textDisplayEntityMixin2.setIsHologram(true);
                             textDisplayEntityMixin2.setHologramName(String.format("LeaderboardTeam_%s", formattedName));
+                            hologramList.add(entity2);
                             world.spawnEntity(entity2);
                         }
                     }
@@ -152,15 +155,13 @@ public class PositionManager {
                         int hologramZ = team2ndPodiumsPos[i][2];
                         Vec3d hologramPos = team2ndPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        Box box = new Box(hologramPos, hologramPos);
-
-                        List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box.expand(1), e -> true);
-                        for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures) {
+                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
                             ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
                             displayEntity.setIsHologram(false);
                             hologram.kill();
                             HologramManager.removeHologram(displayEntity.getHologramName());
                             hologram.remove(Entity.RemovalReason.DISCARDED);
+                            hologramList.remove(hologram);
                         }
 
                         entity.setPosition(hologramPos);
@@ -172,6 +173,7 @@ public class PositionManager {
                         entity.getDataTracker().set(displayEntityMixin.getBillboardData(), (byte) 3);
                         textDisplayEntityMixin.setIsHologram(true);
                         textDisplayEntityMixin.setHologramName(String.format("%s_%s", teamNameMap.get(displayTeam.getName()), playerNames.get(i)));
+                        hologramList.add(entity);
                         world.spawnEntity(entity);
 
                         if (i == 0) {
@@ -192,6 +194,7 @@ public class PositionManager {
                             entity2.getDataTracker().set(displayEntityMixin2.getBillboardData(), (byte) 3);
                             textDisplayEntityMixin2.setIsHologram(true);
                             textDisplayEntityMixin2.setHologramName(String.format("LeaderboardTeam_%s", formattedName));
+                            hologramList.add(entity2);
                             world.spawnEntity(entity2);
                         }
                     }
@@ -215,15 +218,13 @@ public class PositionManager {
                         int hologramZ = team3rdPodiumsPos[i][2];
                         Vec3d hologramPos = team3rdPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        Box box = new Box(hologramPos, hologramPos);
-
-                        List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box.expand(1), e -> true);
-                        for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures) {
+                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
                             ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
                             displayEntity.setIsHologram(false);
                             hologram.kill();
                             HologramManager.removeHologram(displayEntity.getHologramName());
                             hologram.remove(Entity.RemovalReason.DISCARDED);
+                            hologramList.remove(hologram);
                         }
 
                         entity.setPosition(hologramPos);
@@ -235,6 +236,7 @@ public class PositionManager {
                         entity.getDataTracker().set(displayEntityMixin.getBillboardData(), (byte) 3);
                         textDisplayEntityMixin.setIsHologram(true);
                         textDisplayEntityMixin.setHologramName(String.format("%s_%s", teamNameMap.get(displayTeam.getName()), playerNames.get(i)));
+                        hologramList.add(entity);
                         world.spawnEntity(entity);
 
                         if (i == 0) {
@@ -255,6 +257,7 @@ public class PositionManager {
                             entity2.getDataTracker().set(displayEntityMixin2.getBillboardData(), (byte) 3);
                             textDisplayEntityMixin2.setIsHologram(true);
                             textDisplayEntityMixin2.setHologramName(String.format("LeaderboardTeam_%s", formattedName));
+                            hologramList.add(entity2);
                             world.spawnEntity(entity2);
                         }
                     }
