@@ -22,6 +22,7 @@ import net.minecraft.entity.decoration.DisplayEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class NineLives implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ninelives");
 
@@ -39,7 +40,6 @@ public class NineLives implements ModInitializer {
                 ITextDisplayEntityMixin textDisplayEntityMixin = (ITextDisplayEntityMixin)textEntity;
                 if (textDisplayEntityMixin.isHologram()) {
                     HologramManager.addHologram(textDisplayEntityMixin.getHologramName(), entity);
-                    LOGGER.info("Loaded the " + textDisplayEntityMixin.getHologramName() + " hologram");
                 }
             }
 
@@ -47,7 +47,13 @@ public class NineLives implements ModInitializer {
                 StrawStatue statue = (StrawStatue) entity;
                 if (statue.hasCustomName()) {
                     String name = statue.getCustomName().getString();
-                    System.out.println(name);
+                    if (name.startsWith("1st_")) {
+                        PositionManager.team1stPodiums[Integer.parseInt(name.substring(4, 5)) - 1] = statue;
+                    } else if (name.startsWith("2nd_")) {
+                        PositionManager.team2ndPodiums[Integer.parseInt(name.substring(4, 5)) - 1] = statue;
+                    } else if (name.startsWith("3rd_")) {
+                        PositionManager.team3rdPodiums[Integer.parseInt(name.substring(4, 5)) - 1] = statue;
+                    }
                 }
 
             }
@@ -69,13 +75,11 @@ public class NineLives implements ModInitializer {
             if (livesObjective == null) {
                 LOGGER.warn("Scoreboard objective is not created!");
             } else {
-                LOGGER.info(player.getScoreboardTeam().getName());
                 String teamName = player.getScoreboardTeam().getName();
                 if (scoreboard.playerHasObjective(teamName, livesObjective)) {
                     ScoreboardPlayerScore lives = scoreboard.getPlayerScore(teamName, livesObjective);
                     if (lives.getScore() > 0) {
                         lives.incrementScore(-1);
-                        LOGGER.info(String.valueOf(lives.getScore()));
                     } else {
                         player.changeGameMode(GameMode.SPECTATOR);
                     }

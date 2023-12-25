@@ -40,22 +40,22 @@ public class DeathLeaderboardBlock extends Block {
         textDisplayEntityMixin.setHologramTextPlaceholder("""
                     Death Leaderboard
                     <color:#555555><strikethrough></strikethrough></color>
-                    1st: <gold>★</gold> %ninelives:player_deaths 1% %ninelives:player_deaths_name 1%
-                    2nd: <gold>★</gold> %ninelives:player_deaths 2% %ninelives:player_deaths_name 2%
-                    3rd: <gold>★</gold> %ninelives:player_deaths 3% %ninelives:player_deaths_name 3%
-                    4th: <gold>★</gold> %ninelives:player_deaths 4% %ninelives:player_deaths_name 4%
-                    5th: <gold>★</gold> %ninelives:player_deaths 5% %ninelives:player_deaths_name 5%
-                    6th: <gold>★</gold> %ninelives:player_deaths 6% %ninelives:player_deaths_name 6%
-                    7th: <gold>★</gold> %ninelives:player_deaths 7% %ninelives:player_deaths_name 7%
-                    8th: <gold>★</gold> %ninelives:player_deaths 8% %ninelives:player_deaths_name 8%
-                    9th: <gold>★</gold> %ninelives:player_deaths 9% %ninelives:player_deaths_name 9%
-                    10th: <gold>★</gold> %ninelives:player_deaths 10% %ninelives:player_deaths_name 10%
+                    1st: <gold>☠</gold> %ninelives:player_deaths 1% %ninelives:player_deaths_name 1%
+                    2nd: <gold>☠</gold> %ninelives:player_deaths 2% %ninelives:player_deaths_name 2%
+                    3rd: <gold>☠</gold> %ninelives:player_deaths 3% %ninelives:player_deaths_name 3%
+                    4th: <gold>☠</gold> %ninelives:player_deaths 4% %ninelives:player_deaths_name 4%
+                    5th: <gold>☠</gold> %ninelives:player_deaths 5% %ninelives:player_deaths_name 5%
+                    6th: <gold>☠</gold> %ninelives:player_deaths 6% %ninelives:player_deaths_name 6%
+                    7th: <gold>☠</gold> %ninelives:player_deaths 7% %ninelives:player_deaths_name 7%
+                    8th: <gold>☠</gold> %ninelives:player_deaths 8% %ninelives:player_deaths_name 8%
+                    9th: <gold>☠</gold> %ninelives:player_deaths 9% %ninelives:player_deaths_name 9%
+                    10th: <gold>☠</gold> %ninelives:player_deaths 10% %ninelives:player_deaths_name 10%
                     <color:#555555><strikethrough></strikethrough></color>
                     """);
         entity.getDataTracker().set(textDisplayEntityMixin.getBackgroundData(), 0);
         entity.getDataTracker().set(displayEntityMixin.getBillboardData(), (byte) 1);
         textDisplayEntityMixin.setIsHologram(true);
-        textDisplayEntityMixin.setHologramName("PlayerLeaderboard");
+        textDisplayEntityMixin.setHologramName("DeathLeaderboard");
         world.spawnEntity(entity);
     }
 

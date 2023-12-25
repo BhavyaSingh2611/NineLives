@@ -31,29 +31,30 @@ public class TeamBlock extends Block {
     public TeamBlock(Settings settings) {
         super(settings);
     }
-    private final int[][] positions = {{0, 2, 0}, {3, 2, 0}, {-3, 2, 0}};
-    private final int[][] hologramPositions = {{0, 1, 1}, {3, 1, 1}, {-3, 1, 1}};
-    private final int[][] teamHologramPosition = {{0,0,1}};
+    public double[][] positions = {{0, 1, -2}, {0, 1.5, 0}, {0, 1, 2}};
+    public float rotation = 90;
+    private final double[][] teamHologramPosition = {{0, 4.5, 0}};
 
     public String colourName;
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         Scoreboard scoreboard = world.getScoreboard();
+        Team team = scoreboard.getPlayerTeam(colourName + "_Team");
 
-        Team team = scoreboard.getTeam("bac_team_" + colourName.toLowerCase());
         List<String> playerNames = new ArrayList<>(team.getPlayerList().stream().toList());
         playerNames.remove(colourName + "_Team");
 
         for (int i = 0; i < playerNames.size(); i++) {
             String playerName = playerNames.get(i);
-            int x = positions[i][0];
-            int y = positions[i][1];
-            int z = positions[i][2];
+            double x = positions[i][0];
+            double y = positions[i][1];
+            double z = positions[i][2];
             Vec3d statuePos = pos.toCenterPos().add(x, y, z);
 
             StrawStatue straw = new StrawStatue(world, statuePos.x, statuePos.y, statuePos.z);
             straw.verifyAndSetOwner(new GameProfile(null, playerName));
+            straw.setYaw(rotation);
             straw.setNoGravity(true);
             straw.setInvulnerable(true);
             world.spawnEntity(straw);
@@ -62,10 +63,7 @@ public class TeamBlock extends Block {
             ITextDisplayEntityMixin textDisplayEntityMixin = (ITextDisplayEntityMixin) entity;
             IDisplayEntityMixin displayEntityMixin = (IDisplayEntityMixin) entity;
 
-            int hologramX = hologramPositions[i][0];
-            int hologramY = hologramPositions[i][1];
-            int hologramZ = hologramPositions[i][2];
-            Vec3d hologramPos = pos.toCenterPos().add(hologramX, hologramY, hologramZ);
+            Vec3d hologramPos = pos.toCenterPos().add(x, y + 2, z);
 
             entity.setPosition(hologramPos);
             textDisplayEntityMixin.setHologramTextPlaceholder(String.format("""
@@ -83,7 +81,7 @@ public class TeamBlock extends Block {
         ITextDisplayEntityMixin textDisplayEntityMixin = (ITextDisplayEntityMixin) entity;
         IDisplayEntityMixin displayEntityMixin = (IDisplayEntityMixin) entity;
 
-        int[] teamHologramPos = this.teamHologramPosition[0];
+        double[] teamHologramPos = this.teamHologramPosition[0];
         Vec3d hologramPos = pos.toCenterPos().add(teamHologramPos[0], teamHologramPos[1], teamHologramPos[2]);
 
         entity.setPosition(hologramPos);
@@ -108,14 +106,21 @@ public class TeamBlock extends Block {
 
         world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
 
-        Box box = new Box(pos.getX() - 3, pos.getY(), pos.getZ() - 1, pos.getX() + 4,pos.getY() + 4, pos.getZ() + 1);
-        List<StrawStatue> dynamicStatueCaptures = world.getEntitiesByClass(StrawStatue.class, box, e -> e.hasNoGravity() && e.isInvulnerable() && box.contains(e.getPos()));
+        double x1 = pos.getX() + positions[0][0];
+        double y1 = pos.getY() + positions[0][1];
+        double z1 = pos.getZ() + positions[0][2];
+
+        double x2 = pos.getX() + positions[2][0];
+        double y2 = pos.getY() + positions[2][1];
+        double z2 = pos.getZ() + positions[2][2];
+        Box box = new Box(x1, y1, z1 , x2 , y2, z2);
+        List<StrawStatue> dynamicStatueCaptures = world.getEntitiesByClass(StrawStatue.class, box.expand(2,6,2), e -> e.hasNoGravity() && e.isInvulnerable() && box.expand(2,6,2).contains(e.getPos()));
         for (StrawStatue statue: dynamicStatueCaptures) {
             statue.remove(Entity.RemovalReason.DISCARDED);
         }
 
 
-        List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box.expand(2), e -> true);
+        List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box.expand(2,6,2), e -> true);
         for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures) {
             ITextDisplayEntityMixin displayEntityMixin = (ITextDisplayEntityMixin) hologram;
             displayEntityMixin.setIsHologram(false);

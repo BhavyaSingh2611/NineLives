@@ -199,9 +199,7 @@ public class CustomPlaceholders {
         if (ctx.player().getScoreboardTeam() == null) {
             return Text.literal("00").formatted(Formatting.OBFUSCATED);
         } else {
-            Team team = (Team)ctx.player().getScoreboardTeam();
-            String temp = team.getName();
-            String teamName = teamNameMap.get(temp);
+            String teamName = teamNameMap.get(ctx.player().getScoreboardTeam().getName());
             Scoreboard scoreboard = ctx.player().getScoreboard();
             ScoreboardObjective scoreObjective = scoreboard.getNullableObjective("bac_advancements_team");
             if (scoreObjective == null) {

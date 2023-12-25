@@ -47,6 +47,5 @@ public class HologramManager {
                 hologram.getDataTracker().set(textDisplayEntityMixin.getTextData(), Placeholders.parseText(TextParserUtils.formatText(textDisplayEntityMixin.getHologramTextPlaceholder()), PlaceholderContext.of(world.getServer())));
             });
         }
-
     }
 }

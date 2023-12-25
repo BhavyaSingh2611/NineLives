@@ -55,7 +55,7 @@ public class TeamLeaderboardBlock extends Block {
         entity.getDataTracker().set(textDisplayEntityMixin.getBackgroundData(), 0);
         entity.getDataTracker().set(displayEntityMixin.getBillboardData(), (byte) 1);
         textDisplayEntityMixin.setIsHologram(true);
-        textDisplayEntityMixin.setHologramName("PlayerLeaderboard");
+        textDisplayEntityMixin.setHologramName("TeamLeaderboard");
         world.spawnEntity(entity);
     }
 
