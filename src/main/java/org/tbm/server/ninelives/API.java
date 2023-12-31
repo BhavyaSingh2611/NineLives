@@ -1,6 +1,6 @@
 package org.tbm.server.ninelives;
 
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 import org.json.simple.JSONValue;
 
@@ -12,6 +12,10 @@ public class API {
         get("/team", (req, res) -> getTeam());
         get("/player", (req, res) -> getPlayer());
         get("/playerteams", (req, res) -> "{ \"Sakura Syndicate\": [\"TheBayker\", \"Elainettie\", \"SocketKat\"], \"The Greybeards\": [\"Danbearpig82\", \"PyfroAUS\", \"Sir_Laughalot\"],    \"GingerBread Men\": [\"FabledDayes\", \"GaymerSalsa\", \"TheWickedWeasel\"],    \"Creeper Toes\": [\"Blundingen\", \"Noesshie\", \"Tadpole_Milk_\"],    \"The Magenta Menaces\": [\"Kayoss_Taz\", \"MommaMelissa14\", \"Corrupted_Tree\"],    \"Mist Wraiths\": [\"TheXpNetwork\", \"OfftheRailsIR\", \"Givized13\"],    \"Solar Squadron\": [\"Manky_Hamster\", \"Mefallit\", \"Chipz_N_Dipz\"],    \"Paint it Black\": [\"RSNFreud\", \"SiegeTheDay\", \"BlackClad1derer\"],    \"Busta Limes\": [\"GagetGaming\", \"Mistyjoy11\", \"Multibobob\"],    \"O-RNG-EE CRUSH\": [\"MCTCReese\", \"AggroNinja89\", \"NarcoleptiCheeta\"],    \"The 9ice Crew\": [\"Magganna\", \"Sorgan_D\", \"CelticDragoness\"],    \"Cyanide Squad\": [\"Sling_n_Stone\", \"Shortzelda22\", \"ShallowStack\"],    \"Queso Blanco\": [\"GreatLakesGirl\", \"DragonNebula42\", \"Theperfectshot3\"],    \"The Smurfs\": [\"ZeeBeeBlue\", \"Clutchypoo\", \"SonOfAlister\"],    \"Purple Pirates\": [\"oISketcHIo\", \"Linahun\", \"VannahVan16\"]}");
+    }
+
+    public static void stopSpark() {
+        stop();
     }
 
     public static String getTeam() {

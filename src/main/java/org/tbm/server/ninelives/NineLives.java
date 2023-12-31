@@ -37,7 +37,10 @@ public class NineLives implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
             HologramManager.clear();
         });
-        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> PositionManager.onKill(server.getOverworld()));
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+            PositionManager.onKill(server.getOverworld());
+            API.stopSpark();
+        });
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof DisplayEntity.TextDisplayEntity textEntity) {
