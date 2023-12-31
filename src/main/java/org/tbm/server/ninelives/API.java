@@ -1,13 +1,12 @@
 package org.tbm.server.ninelives;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
 
 import org.json.simple.JSONValue;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
 public class API {
     public static void main(String[] args) {
         get("/team", (req, res) -> getTeam());
