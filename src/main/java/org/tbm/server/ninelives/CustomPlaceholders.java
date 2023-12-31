@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CustomPlaceholders {
+    public static final List<String> teams = new ArrayList<>();
     public static final Comparator<ScoreboardPlayerScore> HIGH_SCORE_COMPARATOR = (a, b) -> {
         if (a.getScore() < b.getScore()) {
             return 1;
@@ -29,7 +30,7 @@ public class CustomPlaceholders {
     public static void registerCustomPlaceholders() {
 
         Placeholders.register(new Identifier("ninelives", "timer"), (ctx, arg) -> {
-            LocalDateTime dateTime = LocalDateTime.parse("2024-01-03T00:00:00");
+            LocalDateTime dateTime = LocalDateTime.parse("2024-01-04T18:00:00");
 
             long time = dateTime.toEpochSecond(ZoneOffset.ofHours(0));
             long currentTime = System.currentTimeMillis() / 1000L;
@@ -106,10 +107,10 @@ public class CustomPlaceholders {
                 try {
                     teamPlace = Integer.parseInt(arg);
                 } catch (Exception var4) {
-                    return PlaceholderResult.invalid("number between 1 and 12 required");
+                    return PlaceholderResult.invalid("number between 1 and 16 required");
                 }
 
-                return teamPlace >= 1 && teamPlace <= 12 ? PlaceholderResult.value(getTeamPlaceDisplayName(ctx, teamPlace - 1)) : PlaceholderResult.invalid("number between 1 and 12 required");
+                return teamPlace >= 1 && teamPlace <= 16 ? PlaceholderResult.value(getTeamPlaceDisplayName(ctx, teamPlace - 1)) : PlaceholderResult.invalid("number between 1 and 16 required");
             }
         });
         Placeholders.register(new Identifier("ninelives", "cm_to_score"), (ctx, arg) -> {

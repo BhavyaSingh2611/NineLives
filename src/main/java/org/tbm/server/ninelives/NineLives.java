@@ -27,13 +27,17 @@ public class NineLives implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ninelives");
 
     public void onInitialize() {
+        API.main(null);
         PlayerDeathCallback.EVENT.register((player, source) -> this.deathEvent(player));
         ServerTickEvents.START_WORLD_TICK.register(this::onWorldTick);
         CustomPlaceholders.registerCustomPlaceholders();
         ArgumentTypesAccessor.fabric_getClassMap().put(HologramCommand.HologramArgumentType.class, ConstantArgumentSerializer.of(HologramCommand.HologramArgumentType::hologram));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> HologramCommand.register(dispatcher, registryAccess, environment));
 
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> HologramManager.clear());
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
+            HologramManager.clear();
+        });
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> PositionManager.onKill(server.getOverworld()));
 
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             if (entity instanceof DisplayEntity.TextDisplayEntity textEntity) {
@@ -43,8 +47,7 @@ public class NineLives implements ModInitializer {
                 }
             }
 
-            if (entity instanceof StrawStatue) {
-                StrawStatue statue = (StrawStatue) entity;
+            if (entity instanceof StrawStatue statue) {
                 if (statue.hasCustomName()) {
                     String name = statue.getCustomName().getString();
                     if (name.startsWith("1st_")) {

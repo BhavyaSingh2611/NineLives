@@ -10,22 +10,22 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.tbm.server.ninelives.mixinInterfaces.IDisplayEntityMixin;
 import org.tbm.server.ninelives.mixinInterfaces.ITextDisplayEntityMixin;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PositionManager {
     public static StrawStatue[] team1stPodiums = new StrawStatue[3];
     public static StrawStatue[] team2ndPodiums = new StrawStatue[3];
     public static StrawStatue[] team3rdPodiums = new StrawStatue[3];
-    private static final int[][] team1stPodiumsPos = {{1, 0, 0}, {-1, 0, -1}, {-1, 0, 1}};
+    private static final int[][] team1stPodiumsPos = {{0, 2, 0}, {0, 2, 0}, {0, 2, 0}};
     private static final int[][] team2ndPodiumsPos = {{0, 2, 0}, {0, 2, 0}, {0, 2, 0}};
     private static final int[][] team3rdPodiumsPos = {{0, 2, 0}, {0, 2, 0}, {0, 2, 0}};
 
-    private static List<DisplayEntity.TextDisplayEntity> hologramList = new ArrayList<>();
+    private static List<DisplayEntity.TextDisplayEntity> hologramList = new CopyOnWriteArrayList<>();
     private static long lastLeaderboardCheckTime = 0L;
 
     private static final Comparator<ScoreboardPlayerScore> HIGH_SCORE_COMPARATOR = (a, b) -> {
@@ -74,6 +74,14 @@ public class PositionManager {
             lastLeaderboardCheckTime = world.getTime();
             Scoreboard scoreboard = world.getScoreboard();
             List<ScoreboardPlayerScore> scores = getSortedScores(scoreboard);
+            for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
+                ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
+                displayEntity.setIsHologram(false);
+                hologram.kill();
+                HologramManager.removeHologram(displayEntity.getHologramName());
+                hologram.remove(Entity.RemovalReason.DISCARDED);
+                hologramList.remove(hologram);
+            }
             if (scores != null && !scores.isEmpty()) {
                 Team displayTeam = scoreboard.getPlayerTeam(scores.get(0).getPlayerName());
 
@@ -92,15 +100,6 @@ public class PositionManager {
                         int hologramZ = team1stPodiumsPos[i][2];
                         Vec3d hologramPos = team1stPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
-                            ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
-                            displayEntity.setIsHologram(false);
-                            hologram.kill();
-                            HologramManager.removeHologram(displayEntity.getHologramName());
-                            hologram.remove(Entity.RemovalReason.DISCARDED);
-                            hologramList.remove(hologram);
-                        }
-
                         entity.setPosition(hologramPos);
                         textDisplayEntityMixin.setHologramTextPlaceholder(String.format("""
                         %s
@@ -113,12 +112,12 @@ public class PositionManager {
                         hologramList.add(entity);
                         world.spawnEntity(entity);
 
-                        if (i == 1) {
+                        if (i == 0) {
                             DisplayEntity.TextDisplayEntity entity2 = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, world);
                             ITextDisplayEntityMixin textDisplayEntityMixin2 = (ITextDisplayEntityMixin) entity2;
                             IDisplayEntityMixin displayEntityMixin2 = (IDisplayEntityMixin) entity2;
 
-                            double[] teamHologramPos = {1, 1, 1};
+                            double[] teamHologramPos = {0, 3.5, 0};
                             Vec3d hologramPos2 = team1stPodiums[i].getPos().add(teamHologramPos[0], teamHologramPos[1], teamHologramPos[2]);
 
                             entity2.setPosition(hologramPos2);
@@ -155,15 +154,6 @@ public class PositionManager {
                         int hologramZ = team2ndPodiumsPos[i][2];
                         Vec3d hologramPos = team2ndPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
-                            ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
-                            displayEntity.setIsHologram(false);
-                            hologram.kill();
-                            HologramManager.removeHologram(displayEntity.getHologramName());
-                            hologram.remove(Entity.RemovalReason.DISCARDED);
-                            hologramList.remove(hologram);
-                        }
-
                         entity.setPosition(hologramPos);
                         textDisplayEntityMixin.setHologramTextPlaceholder(String.format("""
                         %s
@@ -181,7 +171,7 @@ public class PositionManager {
                             ITextDisplayEntityMixin textDisplayEntityMixin2 = (ITextDisplayEntityMixin) entity2;
                             IDisplayEntityMixin displayEntityMixin2 = (IDisplayEntityMixin) entity2;
 
-                            double[] teamHologramPos = {-1.5, 0, 0};
+                            double[] teamHologramPos = {0, 3.5, 0};
                             Vec3d hologramPos2 = team2ndPodiums[i].getPos().add(teamHologramPos[0], teamHologramPos[1], teamHologramPos[2]);
 
                             entity2.setPosition(hologramPos2);
@@ -218,15 +208,6 @@ public class PositionManager {
                         int hologramZ = team3rdPodiumsPos[i][2];
                         Vec3d hologramPos = team3rdPodiums[i].getPos().add(hologramX, hologramY, hologramZ);
 
-                        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
-                            ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
-                            displayEntity.setIsHologram(false);
-                            hologram.kill();
-                            HologramManager.removeHologram(displayEntity.getHologramName());
-                            hologram.remove(Entity.RemovalReason.DISCARDED);
-                            hologramList.remove(hologram);
-                        }
-
                         entity.setPosition(hologramPos);
                         textDisplayEntityMixin.setHologramTextPlaceholder(String.format("""
                         %s
@@ -244,7 +225,7 @@ public class PositionManager {
                             ITextDisplayEntityMixin textDisplayEntityMixin2 = (ITextDisplayEntityMixin) entity2;
                             IDisplayEntityMixin displayEntityMixin2 = (IDisplayEntityMixin) entity2;
 
-                            double[] teamHologramPos = {1.5, 0, 0};
+                            double[] teamHologramPos = {0, 3.5, 0};
                             Vec3d hologramPos2 = team3rdPodiums[i].getPos().add(teamHologramPos[0], teamHologramPos[1], teamHologramPos[2]);
 
                             entity2.setPosition(hologramPos2);
@@ -263,6 +244,17 @@ public class PositionManager {
                     }
                 }
             }
+        }
+    }
+
+    public static void onKill(ServerWorld world) {
+        for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
+            ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
+            displayEntity.setIsHologram(false);
+            hologram.kill();
+            HologramManager.removeHologram(displayEntity.getHologramName());
+            hologram.remove(Entity.RemovalReason.DISCARDED);
+            hologramList.remove(hologram);
         }
     }
 }
