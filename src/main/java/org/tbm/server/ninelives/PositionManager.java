@@ -10,6 +10,8 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.tbm.server.ninelives.mixinInterfaces.IDisplayEntityMixin;
 import org.tbm.server.ninelives.mixinInterfaces.ITextDisplayEntityMixin;
@@ -74,14 +76,51 @@ public class PositionManager {
             lastLeaderboardCheckTime = world.getTime();
             Scoreboard scoreboard = world.getScoreboard();
             List<ScoreboardPlayerScore> scores = getSortedScores(scoreboard);
+
             for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
                 ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
-                displayEntity.setIsHologram(false);
                 hologram.kill();
                 HologramManager.removeHologram(displayEntity.getHologramName());
+
+                displayEntity.setIsHologram(false);
                 hologram.remove(Entity.RemovalReason.DISCARDED);
                 hologramList.remove(hologram);
             }
+
+            Box box = new Box(new BlockPos(20, 272, 295)).expand(3);
+            Box box1 = new Box(new BlockPos(20, 272, 285)).expand(3);
+            Box box2 = new Box(new BlockPos(26, 272, 290)).expand(3);
+
+            List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box, e -> true);
+            List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures1 = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box1, e -> true);
+            List<DisplayEntity.TextDisplayEntity> dynamicHologramCaptures2 = world.getEntitiesByClass(DisplayEntity.TextDisplayEntity.class, box2, e -> true);
+
+            for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures) {
+                ITextDisplayEntityMixin displayEntityMixin = (ITextDisplayEntityMixin) hologram;
+                hologram.kill();
+                hologram.remove(Entity.RemovalReason.DISCARDED);
+
+                displayEntityMixin.setIsHologram(false);
+                HologramManager.removeHologram(displayEntityMixin.getHologramName());
+            }
+            for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures1) {
+                ITextDisplayEntityMixin displayEntityMixin = (ITextDisplayEntityMixin) hologram;
+                hologram.kill();
+                hologram.remove(Entity.RemovalReason.DISCARDED);
+
+                displayEntityMixin.setIsHologram(false);
+                HologramManager.removeHologram(displayEntityMixin.getHologramName());
+            }
+            for (DisplayEntity.TextDisplayEntity hologram: dynamicHologramCaptures2) {
+                ITextDisplayEntityMixin displayEntityMixin = (ITextDisplayEntityMixin) hologram;
+                hologram.kill();
+                hologram.remove(Entity.RemovalReason.DISCARDED);
+
+                displayEntityMixin.setIsHologram(false);
+                HologramManager.removeHologram(displayEntityMixin.getHologramName());
+            }
+
+
             if (scores != null && !scores.isEmpty()) {
                 Team displayTeam = scoreboard.getPlayerTeam(scores.get(0).getPlayerName());
 
@@ -250,9 +289,10 @@ public class PositionManager {
     public static void onKill(ServerWorld world) {
         for (DisplayEntity.TextDisplayEntity hologram: hologramList) {
             ITextDisplayEntityMixin displayEntity = (ITextDisplayEntityMixin) hologram;
-            displayEntity.setIsHologram(false);
             hologram.kill();
             HologramManager.removeHologram(displayEntity.getHologramName());
+
+            displayEntity.setIsHologram(false);
             hologram.remove(Entity.RemovalReason.DISCARDED);
             hologramList.remove(hologram);
         }
