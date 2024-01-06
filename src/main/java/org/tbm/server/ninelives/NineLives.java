@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 public class NineLives implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("ninelives");
 
+    public static APIData dataThread;
+
     public void onInitialize() {
         API.main(null);
         PlayerDeathCallback.EVENT.register((player, source) -> this.deathEvent(player));
@@ -34,9 +36,14 @@ public class NineLives implements ModInitializer {
         ArgumentTypesAccessor.fabric_getClassMap().put(HologramCommand.HologramArgumentType.class, ConstantArgumentSerializer.of(HologramCommand.HologramArgumentType::hologram));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> HologramCommand.register(dispatcher, registryAccess, environment));
 
-        ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
-            HologramManager.clear();
+        ServerLifecycleEvents.SERVER_STARTING.register((server) -> HologramManager.clear());
+
+        ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+            dataThread = new APIData(server.getOverworld());
+            dataThread.setName("9lives-data");
+            dataThread.start();
         });
+
         ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
             PositionManager.onKill(server.getOverworld());
             API.stopSpark();

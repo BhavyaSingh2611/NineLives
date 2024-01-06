@@ -77,18 +77,6 @@ public class HologramManager {
 
     public static void onTick(ServerWorld world) {
         long leaderboardCheckInterval = 20L;
-        if (world.equals(world.getServer().getOverworld()) && world.getTime() % 23L == 0L) {
-            teamPlacements(world);
-        }
-        if (world.equals(world.getServer().getOverworld()) && world.getTime() % 29L == 0L) {
-            playerPlacements(world);
-        }
-        if (world.equals(world.getServer().getOverworld()) && world.getTime() % 31L == 0L) {
-            deathPlacements(world);
-        }
-        if (world.equals(world.getServer().getOverworld()) && world.getTime() % 37L == 0L) {
-            teamLivesPlacements(world);
-        }
         if (world.equals(world.getServer().getOverworld()) && world.getTime() - lastLeaderboardCheckTime >= leaderboardCheckInterval) {
             lastLeaderboardCheckTime = world.getTime();
             holograms.forEach((name, hologram) -> {
